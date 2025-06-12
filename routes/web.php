@@ -40,6 +40,24 @@ BEGIN
 END;
 ",
         'Fecha actual' => "BEGIN DBMS_OUTPUT.PUT_LINE(TO_CHAR(SYSDATE)); END;",
+         'Mostrar información de un empleado' => "DECLARE
+    v_emp_id     NUMBER := 100;
+    v_nombre     VARCHAR2(100);
+    v_salario    NUMBER;
+BEGIN
+    SELECT first_name || ' ' || last_name, salary
+    INTO v_nombre, v_salario
+    FROM employees
+    WHERE employee_id = v_emp_id;
+
+    DBMS_OUTPUT.PUT_LINE('Empleado: ' || v_nombre);
+    DBMS_OUTPUT.PUT_LINE('Salario: ' || v_salario);
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('No existe un empleado con ID ' || v_emp_id);
+END;
+
+",
         'Aumentar el salario a todos los empleados de un departamento específico' => "DECLARE
     v_dept_id     NUMBER := 50;
     v_porcentaje  NUMBER := 0.05;
@@ -92,6 +110,24 @@ END;
 
         'Saludo' => "BEGIN DBMS_OUTPUT.PUT_LINE('Hola mundo!'); END;",
         'Fecha actual' => "BEGIN DBMS_OUTPUT.PUT_LINE(TO_CHAR(SYSDATE)); END;",
+        'Mostrar información de un empleado' => "DECLARE
+    v_emp_id     NUMBER := 100;
+    v_nombre     VARCHAR2(100);
+    v_salario    NUMBER;
+BEGIN
+    SELECT first_name || ' ' || last_name, salary
+    INTO v_nombre, v_salario
+    FROM employees
+    WHERE employee_id = v_emp_id;
+
+    DBMS_OUTPUT.PUT_LINE('Empleado: ' || v_nombre);
+    DBMS_OUTPUT.PUT_LINE('Salario: ' || v_salario);
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('No existe un empleado con ID ' || v_emp_id);
+END;
+
+",
         'Aumentar el salario a todos los empleados de un departamento específico' => "DECLARE
     v_dept_id     NUMBER := 50;
     v_porcentaje  NUMBER := 0.05;
