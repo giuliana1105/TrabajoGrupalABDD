@@ -40,6 +40,10 @@
                 </button>
             </div>
         </form>
+
+        <!-- <div class="text-center mt-4">
+            <a href="{{ url('/procedimiento-anonimo') }}" class="text-blue-600 underline">Ver Procedimientos Anónimos</a>
+        </div> -->
     </div>
 
 </body>

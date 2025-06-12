@@ -69,4 +69,44 @@ class UsuarioOracle
             WHERE grantee = UPPER(?)
         ", [$username]);
     }
+
+    public static function ejecutarProcedimientoAnonimo($plsql)
+    {
+        $conn = DB::connection('oracle')->getPdo();
+
+        // Habilita DBMS_OUTPUT
+        $conn->exec("BEGIN DBMS_OUTPUT.ENABLE(NULL); END;");
+
+        // Ejecuta el bloque anónimo
+        $stmt = $conn->prepare($plsql);
+        $stmt->execute();
+
+        // Recupera la salida de DBMS_OUTPUT
+        $lines = [];
+        do {
+            $line = null;
+            $status = null;
+            $stmt = $conn->prepare("
+                DECLARE
+                    line VARCHAR2(32767);
+                    status INTEGER;
+                BEGIN
+                    DBMS_OUTPUT.GET_LINE(line, status);
+                    :line := line;
+                    :status := status;
+                END;
+            ");
+            $stmt->bindParam(':line', $line, \PDO::PARAM_STR | \PDO::PARAM_INPUT_OUTPUT, 32767);
+            $stmt->bindParam(':status', $status, \PDO::PARAM_INT | \PDO::PARAM_INPUT_OUTPUT, 1);
+            $stmt->execute();
+            if ($status === 0) {
+                $lines[] = $line;
+            }
+        } while ($status === 0);
+
+        // Deshabilita DBMS_OUTPUT
+        $conn->exec("BEGIN DBMS_OUTPUT.DISABLE; END;");
+
+        return implode("\n", $lines);
+    }
 }
